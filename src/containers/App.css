@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  min-height: 400px;
+  margin: 30px auto;
+  overflow: auto;
+
+  border: 2px solid rgb(11, 120, 223);
+  padding: 30px;
+  border-radius: 10px;
+}
