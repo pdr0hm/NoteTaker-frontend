@@ -6,19 +6,20 @@ import TaskDetails from '../TasksDetails/TaskDetails';
 import history from '../../history';
 import TasksList from '../TasksList/TasksList';
 import AddTask from '../AddTask/AddTask';
-
-
+import EditTask from '../EditTask/EditTask';
 
 const RoutesPrivate = () => (
   <Router history={history}>
     <Switch>
      
       <Route path='/' exact component={TasksList}/>
-      <Route path="/AddTask" exact component={AddTask}/>
+      <Route path="/addTask" exact component={AddTask}/>
+      <Route path="/edit/:taskId" exact component={EditTask}/>
       <Route 
-        path='/:taskTitle'
+        path='/:taskId'
         component={TaskDetails}
       />
+      
     </Switch>
   </Router>
 )

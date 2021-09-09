@@ -1,34 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import Button from "../Button/Button";
+import api from "../../services/api";
 
+import Button from "../Button/Button";
 import Tasks from "../Tasks/Tasks";
 import "./TasksList.css";
 
-const tasksInitialState = [
-  { title: "Card 1", description: "Desc Card 1" },
-  { title: "Card 2", description: "Desc Card 2 asdasaddas" },
-];
-
 const TasksList = () => {
-  const [tasks, setTasks] = useState(tasksInitialState);
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    const response = await api.get("task");
+    setTasks(JSON.parse(response.data));
+  };
+
   const history = useHistory();
-
-  // const handleTaskAddition = (taskTitle) => {
-  //   if (taskTitle) {
-  //     const newTasks = [
-  //       ...tasks,
-  //       {
-  //         title: taskTitle,
-  //         id: uuidv4(),
-  //         completed: false,
-  //       },
-  //     ];
-
-  //     setTasks(newTasks);
-  //   }
-  // };
 
   const handleTaskClick = (taskId) => {
     const newTasks = tasks.map((task) => {
@@ -40,7 +30,8 @@ const TasksList = () => {
     setTasks(newTasks);
   };
 
-  const handleTaskRemove = (taskId) => {
+  const handleTaskRemove = async (taskId) => {
+    await api.delete(`task/${taskId}`);
     const newTasks = tasks.filter((task) => task.id !== taskId);
 
     setTasks(newTasks);
@@ -59,12 +50,13 @@ const TasksList = () => {
             Adicionar
           </Button>
         </div>
-
-        <Tasks
-          tasks={tasks}
-          handleTaskClick={handleTaskClick}
-          handleTaskRemove={handleTaskRemove}
-        />
+        {tasks && (
+          <Tasks
+            tasks={tasks}
+            handleTaskClick={handleTaskClick}
+            handleTaskRemove={handleTaskRemove}
+          />
+        )}
       </div>
     </>
   );

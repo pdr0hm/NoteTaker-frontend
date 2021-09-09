@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 import "./TaskDetails.css";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
+import api from "../../services/api";
 
 const TaskDetails = () => {
   const history = useHistory();
   const params = useParams();
+  const [task, setTask] = useState();
+
+  const fetchTask = async () => {
+    const response = await api.get(`task/${params.taskId}`);
+    setTask(JSON.parse(response.data));
+  };
+
+  useEffect(() => {
+    fetchTask();
+  }, [fetchTask]);
 
   const handleBackButtonClick = () => {
     history.goBack();
   };
 
-  const handleEditButtonClick = () => {};
+  const handleEditButtonClick = () => {
+    history.push(`/edit/${params.taskId}`);
+  };
 
   return (
     <>
@@ -24,17 +37,19 @@ const TaskDetails = () => {
           cursor="pointer"
           color="#0b78df"
         />
-        <AiFillEdit size="40" cursor="pointer" color="#0b78df" />
+        <AiFillEdit
+          size="40"
+          cursor="pointer"
+          color="#0b78df"
+          onClick={() => handleEditButtonClick()}
+        />
       </div>
-      <div className="task-details-container">
-        <h2>{params.taskTitle}</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-          molestias earum repellat, quidem unde officiis, doloremque quia
-          doloribus sint, ducimus quaerat? Obcaecati vero quae omnis molestias
-          deleniti nostrum eaque veritatis!
-        </p>
-      </div>
+      {task && (
+        <div className="task-details-container">
+          <h2>{task.title}</h2>
+          <p>{task.description}</p>
+        </div>
+      )}
     </>
   );
 };
